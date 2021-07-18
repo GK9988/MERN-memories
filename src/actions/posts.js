@@ -14,6 +14,20 @@ export const getPosts = ()  => async (dispatch) => {
     }
 }
 
+export const imagePost = async (imgObject) => {
+    const fObject = new FormData();
+    fObject.append(
+        "post-image",
+        imgObject.image
+    );
+
+    
+    const {data} = await api.postImage(fObject);
+    return data
+    
+
+}
+
 export const createPost = (post) => async (dispatch) => {
     try {
         const {data} = await api.createPost(post)

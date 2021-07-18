@@ -1,9 +1,8 @@
 import React, {  useState, useEffect } from "react";
 import useStyles from "./styles";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
-import FileBase from "react-file-base64";
 import { useDispatch, useSelector } from "react-redux";
-import { createPost, updatePost } from "../../actions/posts";
+import { createPost, updatePost, imagePost } from "../../actions/posts";
 
 
 const Form = ({currentId, setCurrentId}) => {
@@ -36,6 +35,26 @@ const Form = ({currentId, setCurrentId}) => {
     selectedFile: "",
   });
 
+  const imagePostData = async (e) => {
+    const imageObject = {
+      image: e.target.files[0]
+    }
+
+    const imageUrl = imagePost(imageObject)
+
+    imageUrl.then((data) => {
+      setPostData({ ...postData, selectedFile: data })
+    })
+
+    // console.log(imagePost(imageObject))
+
+    // console.log(imgURL)
+
+    // return null
+
+    // setPostData({ ...postData, selectedFile: imgUrl })
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -50,6 +69,7 @@ const Form = ({currentId, setCurrentId}) => {
     clear()
 
   };
+
 
   return (
     <Paper className={classes.paper}>
@@ -102,7 +122,10 @@ const Form = ({currentId, setCurrentId}) => {
           value={postData.tags}
           onChange={(e) => setPostData({ ...postData, tags: e.target.value.split(',') })}
         ></TextField>
-        <div className={classes.fileInput}><FileBase type="file" multiple={false} onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} /></div>
+        <div className={classes.fileInput}>
+          <label>Choose Image</label>
+          <input type="file" name="post-image" accept="image/*" onChange={imagePostData} />
+        </div>
         <Button
           className={classes.buttonSubmit}
           variant="contained"
