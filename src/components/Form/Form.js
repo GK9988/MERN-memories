@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createPost, updatePost, imagePost } from "../../actions/posts";
 
 
+
 const Form = ({currentId, setCurrentId}) => {
   const classes = useStyles();
   const dispatch = useDispatch();

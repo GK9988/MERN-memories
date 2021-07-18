@@ -14,6 +14,8 @@ import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import {deletePost, likePost} from "../../../actions/posts"
+import {imgURL} from "../../../url";
+
 
 const Post = ({ post, setCurrentId }) => {
   const classes = useStyles();
@@ -23,7 +25,7 @@ const Post = ({ post, setCurrentId }) => {
     <Card className={classes.card}>
       <CardMedia
         className={classes.media}
-        image={post.selectedFile}
+        image={`${imgURL}/${post.selectedFile}`}
         title={post.title}
         
       />
