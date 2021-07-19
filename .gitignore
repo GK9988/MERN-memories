@@ -13,6 +13,8 @@
 
 url.js
 
+oauthkey.js
+
 # misc
 .DS_Store
 .env.local

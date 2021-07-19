@@ -7,3 +7,7 @@ export const DELETE = 'DELETE';
 export const LIKE = 'LIKE';
 
 export const FETCH_ALL = 'FETCH_ALL'
+
+export const AUTH = 'AUTH'
+
+export const LOGOUT = 'LOGOUT'
