@@ -1,26 +1,31 @@
 import axios from 'axios'
-import URL from '../url'
+import API from '../url'
+import {URL} from '../url'
 axios.defaults.timeout = 50000
 
-// export const url = 'http://localhost:8000/posts'
-// export const url = 'https://memories-project-0101.herokuapp.com/posts'
+API.interceptors.request.use((req) => {
+  if(localStorage.getItem('profile')) {
+    req.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`
+  }
 
-const url = URL
+  return req
+})
 
-export const fetchPosts = () => axios.get(url)
-// console.log(axios.get(url))
+export const fetchPosts = () => API.get('/posts')
 
-export const createPost = (newPost) => axios.post(url, newPost)
+export const createPost = (newPost) => API.post('/posts', newPost)
 
-export const updatePost = (id, updatedPost) => axios.patch(`${url}/${id}`, updatedPost)
+export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost)
 
-export const deletePost = (id) => axios.delete(`${url}/${id}`)
+export const deletePost = (id) => API.delete(`/posts/${id}`)
 
-export const likePost = (id) => axios.patch(`${url}/${id}/likePost`)
+export const likePost = (id) => API.patch(`/posts/${id}/likePost`)
 
 export const postImage = (formData) => axios({
     method: "POST",
-    url: `${url}/images`,
+    url: `${URL}/posts/images`,
     data: formData,
   })
-  
+
+export const signIn = (formData) => API.post('/users/signin', formData)
+export const signUp = (formData) => API.post('/users/signup', formData)

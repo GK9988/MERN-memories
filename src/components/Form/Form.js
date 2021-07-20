@@ -1,35 +1,34 @@
-import React, {  useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import useStyles from "./styles";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { createPost, updatePost, imagePost } from "../../actions/posts";
 
-
-
-const Form = ({currentId, setCurrentId}) => {
+const Form = ({ currentId, setCurrentId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
+  const user = JSON.parse(localStorage.getItem("profile"));
 
   const clear = () => {
-    setCurrentId(null)
+    setCurrentId(null);
     setPostData({
-      creator: "",
       title: "",
       message: "",
       tags: "",
       selectedFile: "",
-    })
+    });
   };
 
-  const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null )
+  const post = useSelector((state) =>
+    currentId ? state.posts.find((p) => p._id === currentId) : null
+  );
 
   useEffect(() => {
-    if (post) setPostData(post)
-  }, [post])
+    if (post) setPostData(post);
+  }, [post]);
 
   const [postData, setPostData] = useState({
-    creator: "",
     title: "",
     message: "",
     tags: "",
@@ -37,40 +36,54 @@ const Form = ({currentId, setCurrentId}) => {
   });
 
   const imagePostData = async (e) => {
-    const imageObject = {
-      image: e.target.files[0]
-    }
 
-    const imageUrl = imagePost(imageObject)
+    // const uploadedFile = e.target.files[0];
+    // const urlSafeName = encodeURIComponent(uploadedFile.name)
+    // // const fileObj = {
+    // //   ...uploadedFile, name: urlSafeName
+    // // }
+
+    // console.log({
+    //   ...uploadedFile,
+    //   name: urlSafeName,
+    // })
+
+    const imageObject = {
+      image: e.target.files[0],
+    };
+
+    const imageUrl = imagePost(imageObject);
+
+    // console.log(imageUrl)
 
     imageUrl.then((data) => {
-      setPostData({ ...postData, selectedFile: data })
-    })
-
-    // console.log(imagePost(imageObject))
-
-    // console.log(imgURL)
-
-    // return null
-
-    // setPostData({ ...postData, selectedFile: imgUrl })
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (currentId) {
-      dispatch(updatePost(currentId, postData))
-      
-    } else {
-
-      dispatch(createPost(postData));
-      
-    }
-    clear()
+      setPostData({ ...postData, selectedFile: data });
+    });
 
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (currentId) {
+      dispatch(
+        updatePost(currentId, { ...postData, name: user?.result?.name })
+      );
+    } else {
+      dispatch(createPost({ ...postData, name: user?.result?.name }));
+    }
+    clear();
+  };
+
+  if (!user) {
+    return (
+      <Paper className={classes.paper}>
+        <Typography variant="h6" align="center">
+          Please Sign In to create your own memories and like other's memories.
+        </Typography>
+      </Paper>
+    );
+  }
 
   return (
     <Paper className={classes.paper}>
@@ -80,20 +93,10 @@ const Form = ({currentId, setCurrentId}) => {
         noValidate
         className={`${classes.root}${classes.form}`}
         onSubmit={handleSubmit}
-
       >
-        <Typography variant="h6">{currentId ? 'Editing' : 'Creating'} a memory</Typography>
-        <TextField
-          className={classes.TextField}
-          name="creator"
-          variant="outlined"
-          label="Creator"
-          fullWidth
-          value={postData.creator}
-          onChange={(e) =>
-            setPostData({ ...postData, creator: e.target.value })
-          }
-        ></TextField>
+        <Typography variant="h6">
+          {currentId ? "Editing" : "Creating"} a memory
+        </Typography>
         <TextField
           className={classes.TextField}
           name="title"
@@ -121,11 +124,18 @@ const Form = ({currentId, setCurrentId}) => {
           label="Tags"
           fullWidth
           value={postData.tags}
-          onChange={(e) => setPostData({ ...postData, tags: e.target.value.split(',') })}
+          onChange={(e) =>
+            setPostData({ ...postData, tags: e.target.value.split(",") })
+          }
         ></TextField>
         <div className={classes.fileInput}>
           <label>Choose Image</label>
-          <input type="file" name="post-image" accept="image/*" onChange={imagePostData} />
+          <input
+            type="file"
+            name="post-image"
+            accept="image/*"
+            onChange={imagePostData}
+          />
         </div>
         <Button
           className={classes.buttonSubmit}
