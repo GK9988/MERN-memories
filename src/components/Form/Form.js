@@ -52,13 +52,20 @@ const Form = ({ currentId, setCurrentId }) => {
       image: e.target.files[0],
     };
 
-    const imageUrl = imagePost(imageObject);
+    const imageUrl = await imagePost(imageObject);
 
     // console.log(imageUrl)
 
-    imageUrl.then((data) => {
-      setPostData({ ...postData, selectedFile: data });
-    });
+    setTimeout(() => {
+      // console.log(imageUrl)
+      setPostData({ ...postData, selectedFile: imageUrl });
+    }, 2000)
+
+    
+
+    // imageUrl.then((data) => {
+    //   setPostData({ ...postData, selectedFile: data });
+    // });
 
   };
 
