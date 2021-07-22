@@ -28,14 +28,59 @@ export const imagePost = async (imgObject) => {
 
 }
 
+// export const createPost = (post) => async (dispatch) => {
+//     try {
+//         const {data} = await api.createPost(post)
+
+//         dispatch({type: CREATE, payload: data})
+
+//         console.log(data)
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
+
 export const createPost = (post) => async (dispatch) => {
+
+
+    console.log(post)
+    let formObj = new FormData()
+    formObj.append(
+        'post-image', 
+        post.selectedFile
+        );
+    formObj.append(
+        "name", 
+        post.name
+        );
+    formObj.append(
+        "message", 
+        post.message
+        );
+    formObj.append(
+        "title", 
+        post.title
+        );
+    formObj.append(
+        "tags", 
+        post.tags
+        );
+    console.log(formObj.entries())
+
+    // const {data} = await api.createPost(post)
     try {
-        const {data} = await api.createPost(post)
+        const {data} = await api.createPost(formObj)
 
         dispatch({type: CREATE, payload: data})
+
+        // console.log(data)
     } catch (error) {
         console.log(error)
     }
+    
+
+
+
 }
 
 export const updatePost = (id, post) => async (dispatch) => {

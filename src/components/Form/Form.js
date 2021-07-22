@@ -2,13 +2,16 @@ import React, { useState, useEffect } from "react";
 import useStyles from "./styles";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { createPost, updatePost, imagePost } from "../../actions/posts";
+import { createPost, updatePost} from "../../actions/posts";
 
 const Form = ({ currentId, setCurrentId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
+
   const user = JSON.parse(localStorage.getItem("profile"));
+
+  
 
   const clear = () => {
     setCurrentId(null);
@@ -35,52 +38,61 @@ const Form = ({ currentId, setCurrentId }) => {
     selectedFile: "",
   });
 
-  const imagePostData = async (e) => {
+  const imagePostData = (e) => {
 
-    // const uploadedFile = e.target.files[0];
-    // const urlSafeName = encodeURIComponent(uploadedFile.name)
-    // // const fileObj = {
-    // //   ...uploadedFile, name: urlSafeName
-    // // }
+    // const imageObject = {
+    //   image: e.target.files[0],
+    // };
 
-    // console.log({
-    //   ...uploadedFile,
-    //   name: urlSafeName,
-    // })
+    // const imageUrl = await imagePost(imageObject);
 
-    const imageObject = {
-      image: e.target.files[0],
-    };
+    setPostData({ ...postData, selectedFile:e.target.files[0] });
 
-    const imageUrl = await imagePost(imageObject);
 
-    // console.log(imageUrl)
 
-    setTimeout(() => {
-      // console.log(imageUrl)
-      setPostData({ ...postData, selectedFile: imageUrl });
-    }, 2000)
 
-    
 
-    // imageUrl.then((data) => {
-    //   setPostData({ ...postData, selectedFile: data });
-    // });
 
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // console.log(postData)
+
+
+    // console.log(user?.result?.name)
+    
+
+    
+    // console.log(postData)
+
+
+    // console.log({ ...postData, 'name': user?.result?.name })
+
     if (currentId) {
       dispatch(
-        updatePost(currentId, { ...postData, name: user?.result?.name })
+        updatePost(currentId, { ...postData, 'name': user?.result?.name })
       );
     } else {
-      dispatch(createPost({ ...postData, name: user?.result?.name }));
+      dispatch(createPost({ ...postData, 'name': user?.result?.name }));
     }
     clear();
   };
+
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   if (currentId) {
+  //     dispatch(
+  //       updatePost(currentId, { ...postData, name: user?.result?.name })
+  //     );
+  //   } else {
+  //     dispatch(createPost({ ...postData, name: user?.result?.name }));
+  //   }
+  //   clear();
+  // };
 
   if (!user) {
     return (
@@ -111,7 +123,9 @@ const Form = ({ currentId, setCurrentId }) => {
           label="Title"
           fullWidth
           value={postData.title}
-          onChange={(e) => setPostData({ ...postData, title: e.target.value })}
+          onChange={(e) => {
+            setPostData({ ...postData, title: e.target.value })
+          }}
         ></TextField>
         <TextField
           className={classes.TextField}
@@ -120,9 +134,9 @@ const Form = ({ currentId, setCurrentId }) => {
           label="Message"
           fullWidth
           value={postData.message}
-          onChange={(e) =>
+          onChange={(e) =>{
             setPostData({ ...postData, message: e.target.value })
-          }
+          }}
         ></TextField>
         <TextField
           className={classes.TextField}
@@ -131,9 +145,9 @@ const Form = ({ currentId, setCurrentId }) => {
           label="Tags"
           fullWidth
           value={postData.tags}
-          onChange={(e) =>
+          onChange={(e) =>{
             setPostData({ ...postData, tags: e.target.value.split(",") })
-          }
+          }}
         ></TextField>
         <div className={classes.fileInput}>
           <label>Choose Image</label>
