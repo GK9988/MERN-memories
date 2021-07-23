@@ -65,7 +65,7 @@ export const createPost = (post) => async (dispatch) => {
         "tags", 
         post.tags
         );
-    console.log(formObj.entries())
+    // console.log(formObj.entries())
 
     // const {data} = await api.createPost(post)
     try {
