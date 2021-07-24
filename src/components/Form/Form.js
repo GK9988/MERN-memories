@@ -2,16 +2,15 @@ import React, { useState, useEffect } from "react";
 import useStyles from "./styles";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { createPost, updatePost} from "../../actions/posts";
+import { createPost, updatePost } from "../../actions/posts";
+import { useHistory } from "react-router-dom";
 
 const Form = ({ currentId, setCurrentId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-
+  const history = useHistory();
 
   const user = JSON.parse(localStorage.getItem("profile"));
-
-  
 
   const clear = () => {
     setCurrentId(null);
@@ -24,7 +23,7 @@ const Form = ({ currentId, setCurrentId }) => {
   };
 
   const post = useSelector((state) =>
-    currentId ? state.posts.find((p) => p._id === currentId) : null
+    currentId ? state.posts.posts.find((p) => p._id === currentId) : null
   );
 
   useEffect(() => {
@@ -39,20 +38,13 @@ const Form = ({ currentId, setCurrentId }) => {
   });
 
   const imagePostData = (e) => {
-
     // const imageObject = {
     //   image: e.target.files[0],
     // };
 
     // const imageUrl = await imagePost(imageObject);
 
-    setPostData({ ...postData, selectedFile:e.target.files[0] });
-
-
-
-
-
-
+    setPostData({ ...postData, selectedFile: e.target.files[0] });
   };
 
   const handleSubmit = (e) => {
@@ -60,26 +52,21 @@ const Form = ({ currentId, setCurrentId }) => {
 
     // console.log(postData)
 
-
     // console.log(user?.result?.name)
-    
 
-    
     // console.log(postData)
-
 
     // console.log({ ...postData, 'name': user?.result?.name })
 
     if (currentId) {
       dispatch(
-        updatePost(currentId, { ...postData, 'name': user?.result?.name })
+        updatePost(currentId, { ...postData, name: user?.result?.name })
       );
     } else {
-      dispatch(createPost({ ...postData, 'name': user?.result?.name }));
+      dispatch(createPost({ ...postData, name: user?.result?.name }, history));
     }
     clear();
   };
-
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -105,7 +92,7 @@ const Form = ({ currentId, setCurrentId }) => {
   }
 
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} elevation={6}>
       <form
         action=""
         autoComplete="off"
@@ -124,7 +111,7 @@ const Form = ({ currentId, setCurrentId }) => {
           fullWidth
           value={postData.title}
           onChange={(e) => {
-            setPostData({ ...postData, title: e.target.value })
+            setPostData({ ...postData, title: e.target.value });
           }}
         ></TextField>
         <TextField
@@ -134,8 +121,8 @@ const Form = ({ currentId, setCurrentId }) => {
           label="Message"
           fullWidth
           value={postData.message}
-          onChange={(e) =>{
-            setPostData({ ...postData, message: e.target.value })
+          onChange={(e) => {
+            setPostData({ ...postData, message: e.target.value });
           }}
         ></TextField>
         <TextField
@@ -145,8 +132,8 @@ const Form = ({ currentId, setCurrentId }) => {
           label="Tags"
           fullWidth
           value={postData.tags}
-          onChange={(e) =>{
-            setPostData({ ...postData, tags: e.target.value.split(",") })
+          onChange={(e) => {
+            setPostData({ ...postData, tags: e.target.value.split(",") });
           }}
         ></TextField>
         <div className={classes.fileInput}>

@@ -1,43 +1,59 @@
-import axios from 'axios'
-import API from '../url'
-import {URL} from '../url'
-import {createAPI} from '../url'
-axios.defaults.timeout = 50000
+import axios from "axios";
+import API from "../url";
+import { URL } from "../url";
+import { createAPI } from "../url";
+axios.defaults.timeout = 50000;
 
 API.interceptors.request.use((req) => {
-  if(localStorage.getItem('profile')) {
-    req.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`
+  if (localStorage.getItem("profile")) {
+    req.headers.authorization = `Bearer ${
+      JSON.parse(localStorage.getItem("profile")).token
+    }`;
   }
 
-  return req
-})
+  return req;
+});
 
 createAPI.interceptors.request.use((req) => {
-  if(localStorage.getItem('profile')) {
-    req.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`
+  if (localStorage.getItem("profile")) {
+    req.headers.authorization = `Bearer ${
+      JSON.parse(localStorage.getItem("profile")).token
+    }`;
   }
 
-  return req
-})
+  return req;
+});
 
-export const fetchPosts = () => API.get('/posts')
+export const fetchPosts = (page) => API.get(`/posts?page=${page}`);
 
-export const createPost = (newPost) => createAPI({
-  method: 'POST',
-  data: newPost
-})
+export const fetchPost = (id) => API.get(`/posts/${id}`);
 
-export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost)
+export const fetchPostsBySearch = (searchQuery) =>
+  API.get(
+    `/posts/search?searchQuery=${searchQuery.search || "none"}&tags=${
+      searchQuery.tags
+    }`
+  );
 
-export const deletePost = (id) => API.delete(`/posts/${id}`)
+export const createPost = (newPost) =>
+  createAPI({
+    method: "POST",
+    data: newPost,
+  });
 
-export const likePost = (id) => API.patch(`/posts/${id}/likePost`)
+export const updatePost = (id, updatedPost) =>
+  API.patch(`/posts/${id}`, updatedPost);
 
-export const postImage = (formData) => axios({
+export const deletePost = (id) => API.delete(`/posts/${id}`);
+
+export const likePost = (id) => API.patch(`/posts/${id}/likePost`);
+
+export const postImage = (formData) =>
+  axios({
     method: "POST",
     url: `${URL}/posts/images`,
     data: formData,
-  })
+  });
 
-export const signIn = (formData) => API.post('/users/signin', formData)
-export const signUp = (formData) => API.post('/users/signup', formData)
+export const signIn = (formData) => API.post("/users/signin", formData);
+export const signUp = (formData) => API.post("/users/signup", formData);
